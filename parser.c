@@ -19,8 +19,6 @@ void	parser(char *file_name, t_mdata *data)
 		free(str);
 	}
 	close(fd);
-	/* printf("no: %s\nso: %s\nea: %s\nwe: %s\nc: %d\nf: %d\nrows: %d\ncolumns: %d\nstart_x: %d\nstart_y: %d\n" \
-	, data->no, data->so, data->ea, data->we, data->c, data->f, data->rows, data->columns, data->start_x, data->start_y); */
 	if (data->columns == 0 || data->rows == 0)
 		error_handle(data, "there is no map\n");
 	create_map(file_name, data);
