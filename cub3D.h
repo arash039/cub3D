@@ -155,8 +155,6 @@ int		change_win(t_mdata *data);
 void	screen_size(t_mdata *data);
 
 void	minimap_init(t_mdata *data);
-void minimap_draw(t_mdata *data, int playerX, int playerY);
-
-
+void minimap_draw(t_mdata *data, int player_x, int player_y);
 
 #endif

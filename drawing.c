@@ -235,7 +235,7 @@ void	minimap_init(t_mdata *data)
 	bits_per_pixel, &data->minimap.line_length, &data->minimap.endian);
 }
 
-void minimap_draw(t_mdata *data, int playerX, int playerY)
+/* void minimap_draw(t_mdata *data, int playerX, int playerY)
 {
     int x;
     int y;
@@ -266,6 +266,36 @@ void minimap_draw(t_mdata *data, int playerX, int playerY)
                     (data->map[original_x][original_y] == 1) ? 0x000000 : ((data->map[original_x][original_y] == 0) ? 0xFFFFFF : 0x00ff600);
             }
 
+            y++;
+        }
+        x++;
+    }
+} */
+
+void minimap_draw(t_mdata *data, int player_x, int player_y)
+{
+    int x;
+    int y;
+	int original_x;
+	int original_y;
+
+    x = 0;
+    while (x < 200)
+    {
+        y = 0;
+        while (y < 200)
+        {
+            original_x = (int)(x * (double)data->rows / 200.0);
+            original_y = (int)(y * (double)data->columns / 200.0);
+            if (original_x == player_x && original_y == player_y)
+                data->minimap.addr[x * 200 + y] = 0xFF0000;
+            else
+            {
+				if (data->map[original_x][original_y] == 1)
+					data->minimap.addr[x * 200 + y] = 0x000000;
+				else if (data->map[original_x][original_y] == 0)
+					data->minimap.addr[x * 200 + y] = 0xFFFFFF;
+			}
             y++;
         }
         x++;
