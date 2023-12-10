@@ -189,8 +189,11 @@ int		raycasting(t_mdata *data)
 		drawing_function(data);
 		data->ray.x++;
 	}
+	minimap_draw(data, (int)round(data->ray.posx), (int)round(data->ray.posy));
 	mlx_put_image_to_window(data->main_data.mlx_ptr, data->main_data.mlx_win,
 			data->main_data.img, 0, 0);
+	mlx_put_image_to_window(data->main_data.mlx_ptr, data->main_data.mlx_win,
+			data->minimap.img, 0, 0);
 	move_forward_back(data);
 	move_left_right(data);
 	rotate_right_left(data);
@@ -201,7 +204,8 @@ int		mlx_main(t_mdata *data)
 {
 	if (!(data->main_data.mlx_ptr = mlx_init()))
 		error_handle(data, "Mlx not initialized\n");
-	screen_size(data);
+	//screen_size(data);
+	minimap_init(data);
 	data->main_data.img = mlx_new_image(data->main_data.mlx_ptr, data->wx, data->wy);
 	data->main_data.addr = (int *)mlx_get_data_addr(data->main_data.img, &data->main_data. \
 	bits_per_pixel, &data->main_data.line_length, &data->main_data.endian);
@@ -222,4 +226,48 @@ void	screen_size(t_mdata *data)
 		data->wx = data->screenx;
 	if (data->wy > data->screeny)
 		data->wy = data->screeny;
+}
+
+void	minimap_init(t_mdata *data)
+{
+	data->minimap.img = mlx_new_image(data->main_data.mlx_ptr, 200, 200);
+	data->minimap.addr = (int *)mlx_get_data_addr(data->minimap.img, &data->minimap. \
+	bits_per_pixel, &data->minimap.line_length, &data->minimap.endian);
+}
+
+void minimap_draw(t_mdata *data, int playerX, int playerY)
+{
+    int x;
+    int y;
+
+    // Calculate the scale factors for rows and columns
+    double row_scale = (double)data->rows / 200.0;
+    double col_scale = (double)data->columns / 200.0;
+
+    x = 0;
+    while (x < 200)
+    {
+        y = 0;
+        while (y < 200)
+        {
+            // Calculate the corresponding position in the original map
+            int original_x = (int)(x * row_scale);
+            int original_y = (int)(y * col_scale);
+
+            // Set the color in the minimap based on the corresponding cell in the original map
+            if (original_x == playerX && original_y == playerY)
+            {
+                // Highlight player position with a different color (e.g., red)
+                data->minimap.addr[x * 200 + y] = 0xFF0000;
+            }
+            else
+            {
+                data->minimap.addr[x * 200 + y] =
+                    (data->map[original_x][original_y] == 1) ? 0x000000 : ((data->map[original_x][original_y] == 0) ? 0xFFFFFF : 0x00ff600);
+            }
+
+            y++;
+        }
+        x++;
+    }
 }

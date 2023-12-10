@@ -90,6 +90,7 @@ typedef struct		s_mdata
 	char	*err_msg;
 	t_idata textures[4];
 	t_idata	main_data;
+	t_idata	minimap;
 	t_ray	ray;
 }	t_mdata;
 
@@ -152,5 +153,10 @@ int		key_press(int keycode, t_mdata *data);
 int		handle_resize(int button, int x, int y, t_mdata *data);
 int		change_win(t_mdata *data);
 void	screen_size(t_mdata *data);
+
+void	minimap_init(t_mdata *data);
+void minimap_draw(t_mdata *data, int playerX, int playerY);
+
+
 
 #endif
