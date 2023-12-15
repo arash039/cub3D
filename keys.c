@@ -2,7 +2,6 @@
 
 int		key_press(int keycode, t_mdata *data)
 {
-	//printf("%d\n", keycode);
 	if (keycode == 119)
 		data->main_data.forward = 1;
 	else if (keycode == 115)
@@ -15,6 +14,8 @@ int		key_press(int keycode, t_mdata *data)
 		data->main_data.rotate_left = 1;
 	else if (keycode == 65363)
 		data->main_data.rotate_right = 1;
+	else if (keycode == 109)
+		data->mini = data->mini * -1;
 	else if (keycode == 111)
 	{
 		data->wx = data->wx + 10;
@@ -135,6 +136,8 @@ int		clean_exit(t_mdata *data)
 {
 	if (data->main_data.img)
 		mlx_destroy_image(data->main_data.mlx_ptr, data->main_data.img);
+	if (data->minimap.img)
+		mlx_destroy_image(data->main_data.mlx_ptr, data->minimap.img);
 	if (data->main_data.mlx_win)
 		mlx_destroy_window(data->main_data.mlx_ptr, data->main_data.mlx_win);
 	mlx_destroy_display(data->main_data.mlx_ptr);

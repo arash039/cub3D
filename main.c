@@ -12,6 +12,7 @@ void	initialize(t_mdata *data)
 	data->wy = 460;
 	data->err_msg = NULL;
 	data->bytes = 1;
+	data->mini = -1;
 	memset(data->map, 0, sizeof(data->map));
 	memset(data->ea, 0, MAX_PATH);
 	memset(data->we, 0, MAX_PATH);

@@ -79,6 +79,7 @@ typedef struct		s_mdata
 	int	screenx;
 	int	screeny;
 	int	bytes;
+	int	mini;
 	char	start;
 	int		start_x;
 	int		start_y;

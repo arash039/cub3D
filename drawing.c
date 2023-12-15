@@ -191,8 +191,9 @@ int		raycasting(t_mdata *data)
 	}
 	minimap_draw(data, (int)round(data->ray.posx), (int)round(data->ray.posy));
 	mlx_put_image_to_window(data->main_data.mlx_ptr, data->main_data.mlx_win,
-			data->main_data.img, 0, 0);
-	mlx_put_image_to_window(data->main_data.mlx_ptr, data->main_data.mlx_win,
+		data->main_data.img, 0, 0);
+	if (data->mini == 1)
+		mlx_put_image_to_window(data->main_data.mlx_ptr, data->main_data.mlx_win,
 			data->minimap.img, 0, 0);
 	move_forward_back(data);
 	move_left_right(data);
