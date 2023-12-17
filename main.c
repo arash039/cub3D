@@ -13,6 +13,10 @@ void	initialize(t_mdata *data)
 	data->err_msg = NULL;
 	data->bytes = 1;
 	data->mini = -1;
+	//data->main_data.last_x = data->wx / 2;
+	//data->main_data.last_y = data->wy / 2;
+	data->main_data.last_x = -1;
+	data->main_data.last_y = -1;
 	memset(data->map, 0, sizeof(data->map));
 	memset(data->ea, 0, MAX_PATH);
 	memset(data->we, 0, MAX_PATH);

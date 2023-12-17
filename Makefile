@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -L./mlx -lmlx_Linux -L/usr/lib -lXext -lX11 -lm -lz
 
 # Source files
-SRCS = main.c parser.c gnl.c gnl_utils.c drawing.c keys.c
+SRCS = main.c parser.c gnl.c gnl_utils.c drawing.c keys.c texture.c
 
 # Object files
 OBJS = $(SRCS:.c=.o)

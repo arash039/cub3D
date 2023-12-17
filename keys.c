@@ -186,3 +186,33 @@ int		change_win(t_mdata *data)
     }
 	return (0);
 } */
+
+int	mouse_move(int x, int y, t_mdata *data)
+{
+	int		delta_x;
+	int		delta_y;
+
+	if (data->main_data.last_x == -1 && data->main_data.last_y == -1)
+	{
+		data->main_data.last_x = x;
+		data->main_data.last_y = y;
+		return (0);
+	}
+	delta_x = x - data->main_data.last_x;
+	delta_y = y - data->main_data.last_y;
+	(void)delta_y;
+	data->main_data.last_x = x;
+	data->main_data.last_y = y;
+	if (delta_x > 0) // mouse moved to the right
+		data->main_data.rotate_right = 1;
+	else if (delta_x < 0) // mouse moved to the left
+		data->main_data.rotate_left = 1;
+	else // mouse didn't move horizontally
+	{
+		data->main_data.rotate_right = 0;
+		data->main_data.rotate_left = 0;
+	}
+	return (0);
+}
+
+

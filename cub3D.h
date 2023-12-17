@@ -16,6 +16,16 @@
 # define MAX_PATH	4096
 # define MAX_SIZE	1024
 
+typedef struct		s_texture
+{
+	int				texdir;
+	double			wallx; //where exactly the wall was hit.  the exact value where the wall was hit, not just the integer coordinates of the wall
+	int				texx; //int texX = int(wallX * double(texWidth)), x coordinate on the texture
+	int				texy; //increasing by a precomputed step size (which is possible because this is constant in the vertical stripe) for each pixel
+	double			step; //How much to increase the texture coordinate per screen pixel. 1.0 * texHeight / lineHeight
+	double			texpos; //Starting texture coordinate. drawStart - h / 2 + lineHeight / 2) * step
+}					t_texture;
+
 typedef struct		s_idata
 {
 	void			*mlx_ptr;
@@ -34,6 +44,8 @@ typedef struct		s_idata
 	int				minimapechelle;
 	int				width;
 	int				height;
+	int 			last_x;
+	int 			last_y;
 }					t_idata;
 
 typedef struct		s_ray
@@ -93,7 +105,10 @@ typedef struct		s_mdata
 	t_idata	main_data;
 	t_idata	minimap;
 	t_ray	ray;
+	t_texture	tex;
 }	t_mdata;
+
+
 
 void	parser(char *file_name, t_mdata *data);
 int		color_finder(char *str, t_mdata *data);
@@ -157,5 +172,13 @@ void	screen_size(t_mdata *data);
 
 void	minimap_init(t_mdata *data);
 void minimap_draw(t_mdata *data, int player_x, int player_y);
+
+int	mouse_move(int x, int y, t_mdata *data);
+
+void	get_texture_adress(t_mdata *data);
+void	get_texture_img(t_mdata *data);
+void	init_texture(t_mdata *data);
+void draw_texture_pixel(int x, int y, t_mdata *data);
+void	draw_texture(t_mdata *data, int x, int y);
 
 #endif

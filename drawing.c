@@ -166,11 +166,13 @@ int		drawing_function(t_mdata *data)
 	while (++j < data->ray.drawstart)
 		data->main_data.addr[j * data->main_data.line_length / 4 +
 			data->ray.x] = data->c;
-	while (++j <= data->ray.drawend)
+	/* while (++j <= data->ray.drawend)
 	{
 		data->main_data.addr[j * data->main_data.line_length / 4 +
 			data->ray.x] = 0x00008b; //= 0x00ff6000;
-	}
+	} */
+	if (j <= data->ray.drawend)
+		draw_texture(data, data->ray.x, j);
 	j = i;
 	while (++j < data->wy)
 		data->main_data.addr[j * data->main_data.line_length / 4 +
@@ -206,6 +208,7 @@ int		mlx_main(t_mdata *data)
 	if (!(data->main_data.mlx_ptr = mlx_init()))
 		error_handle(data, "Mlx not initialized\n");
 	//screen_size(data);
+	get_texture_img(data);
 	minimap_init(data);
 	data->main_data.img = mlx_new_image(data->main_data.mlx_ptr, data->wx, data->wy);
 	data->main_data.addr = (int *)mlx_get_data_addr(data->main_data.img, &data->main_data. \
@@ -214,6 +217,7 @@ int		mlx_main(t_mdata *data)
 			data->wy, "CUB3D");
 	mlx_hook(data->main_data.mlx_win, 33, 1L << 17, clean_exit, data);
 	mlx_hook(data->main_data.mlx_win, 2, 1L << 0, key_press, data);
+	mlx_hook(data->main_data.mlx_win, 6, 1L << 6, mouse_move, data);
 	mlx_loop_hook(data->main_data.mlx_ptr, raycasting, data);
 	mlx_hook(data->main_data.mlx_win, 3, 1L << 1, key_release, data);
 	mlx_loop(data->main_data.mlx_ptr);
