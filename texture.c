@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ashojach <ashojach@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/19 12:33:00 by ashojach          #+#    #+#             */
+/*   Updated: 2023/12/19 13:14:15 by ashojach         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3D.h"
 
 void	get_texture_adress(t_mdata *data)
@@ -18,23 +30,32 @@ void	get_texture_adress(t_mdata *data)
 
 void	get_texture_img(t_mdata *data)
 {
-	if (!(data->textures[0].img = mlx_xpm_file_to_image(data->main_data.mlx_ptr, \
-	data->so, &(data->textures[0].width), &(data->textures[0].height))))
-		error_handle(data, "Texture SO\n");
-	if (!(data->textures[1].img = mlx_xpm_file_to_image(data->main_data.mlx_ptr,
-					data->no, &(data->textures[1].width),
-					&(data->textures[1].height))))
-		error_handle(data, "Texture NO\n");
-	if (!(data->textures[2].img = mlx_xpm_file_to_image(data->main_data.mlx_ptr,
-					data->ea, &(data->textures[2].width),
-					&(data->textures[2].height))))
-		error_handle(data, "Texture EA\n");
-	if (!(data->textures[3].img = mlx_xpm_file_to_image(data->main_data.mlx_ptr,
-					data->we, &(data->textures[3].width),
-					&(data->textures[3].height))))
-		error_handle(data, "Texture WE\n");
+	data->clean_exit = 1;
+	data->textures[0].img = mlx_xpm_file_to_image(data->main_data.\
+	mlx_ptr, data->so, &(data->textures[0].width), &(data->textures[0].height));
+	if (!(data->textures[0].img))
+		error_handle(data, "Texture SOUTH\n");
+	data->textures[1].img = mlx_xpm_file_to_image(data->main_data.\
+	mlx_ptr, data->no, &(data->textures[1].width), &(data->textures[1].height));
+	if (!(data->textures[1].img))
+		error_handle(data, "Texture NORTH\n");
+	data->textures[2].img = mlx_xpm_file_to_image(data->main_data.\
+	mlx_ptr, data->ea, &(data->textures[2].width), \
+	&(data->textures[2].height));
+	if (!(data->textures[2].img))
+		error_handle(data, "Texture EAST\n");
+	data->textures[3].img = mlx_xpm_file_to_image(data->main_data.\
+	mlx_ptr, data->we, &(data->textures[3].width), \
+	&(data->textures[3].height));
+	if (!(data->textures[3].img))
+		error_handle(data, "Texture WEST\n");
 	get_texture_adress(data);
 }
+
+/*calculates the largest integer that is less than or equal to wallX,
+effectively truncating the decimal part of wallX and keeping only the
+integer part. first take the real number and then bring in into the
+-1,1 range of the screen*/
 
 void	init_texture(t_mdata *data)
 {
@@ -52,19 +73,14 @@ void	init_texture(t_mdata *data)
 	else
 		data->tex.wallx = data->ray.posx + data->ray.perpwalldist \
 						* data->ray.raydirx;
-	/*calculates the largest integer that is less than or equal to wallX,
-	effectively truncating the decimal part of wallX and keeping only the
-	integer part. first take the real number and then bring in into the
-	-1,1 range of the screen*/
 	data->tex.wallx -= floor((data->tex.wallx));
 }
 
-void draw_texture_pixel(int x, int y, t_mdata *data)
+void	draw_texture_pixel(int x, int y, t_mdata *data)
 {
-	data->main_data.addr[y * data->main_data.line_length / 4 + x] =
-		data->textures[data->tex.texdir].addr[data->tex.texy *
-			data->textures[data->tex.texdir].line_length /
-			4 + data->tex.texx];
+	data->main_data.addr[y * data->main_data.line_length / 4 + x] = \
+	data->textures[data->tex.texdir].addr[data->tex.texy * \
+	data->textures[data->tex.texdir].line_length / 4 + data->tex.texx];
 }
 
 void	draw_texture(t_mdata *data, int x, int y)
@@ -72,14 +88,14 @@ void	draw_texture(t_mdata *data, int x, int y)
 	y = data->ray.drawstart - 1;
 	init_texture(data);
 	data->tex.step = 1.0 * data->textures[0].height / data->ray.lineheight;
-	data->tex.texx = (int)(data->tex.wallx * (double)data->textures
-			[data->tex.texdir].width);
-	data->tex.texpos = (data->ray.drawstart - data->wy / 2 +
-			data->ray.lineheight / 2) * data->tex.step;
+	data->tex.texx = (int)(data->tex.wallx * (double)data->textures \
+	[data->tex.texdir].width);
+	data->tex.texpos = (data->ray.drawstart - data->wy / 2 + \
+	data->ray.lineheight / 2) * data->tex.step;
 	while (++y <= data->ray.drawend)
 	{
-		data->tex.texy = (int)data->tex.texpos &
-			(data->textures[data->tex.texdir].height - 1);
+		data->tex.texy = (int)data->tex.texpos & \
+		(data->textures[data->tex.texdir].height - 1);
 		data->tex.texpos += data->tex.step;
 		if (y < data->wy && x < data->wx)
 			draw_texture_pixel(x, y, data);

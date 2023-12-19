@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ashojach <ashojach@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/19 12:32:08 by ashojach          #+#    #+#             */
+/*   Updated: 2023/12/19 13:25:14 by ashojach         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3D.h"
 
 void	initialize(t_mdata *data)
@@ -13,10 +25,12 @@ void	initialize(t_mdata *data)
 	data->err_msg = NULL;
 	data->bytes = 1;
 	data->mini = -1;
-	//data->main_data.last_x = data->wx / 2;
-	//data->main_data.last_y = data->wy / 2;
+	data->inmap = 0;
+	data->newline = 0;
+	data->clean_exit = 0;
 	data->main_data.last_x = -1;
 	data->main_data.last_y = -1;
+	init_image(data);
 	memset(data->map, 0, sizeof(data->map));
 	memset(data->ea, 0, MAX_PATH);
 	memset(data->we, 0, MAX_PATH);
@@ -24,7 +38,28 @@ void	initialize(t_mdata *data)
 	memset(data->so, 0, MAX_PATH);
 }
 
-int		pre_check(char *str, t_mdata *data)
+void	print_map(t_mdata *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	printf("%d:", i + 1);
+	while (i < data->rows)
+	{
+		j = 0;
+		while (j < data->columns)
+		{
+			printf("%d ", data->map[i][j]);
+			j++;
+		}
+		i++;
+		printf("\n%d:", i + 1);
+	}
+}
+
+int	pre_check(char *str, t_mdata *data)
 {
 	int			i;
 
@@ -47,9 +82,35 @@ int		pre_check(char *str, t_mdata *data)
 	return (0);
 }
 
-int		main(int argc, char **argv)
+int	mlx_main(t_mdata *data)
+{
+	ray_init(data);
+	data->main_data.mlx_ptr = mlx_init();
+	if (!(data->main_data.mlx_ptr))
+		error_handle(data, "Mlx not initialized\n");
+	//screen_size(data);
+	get_texture_img(data);
+	minimap_init(data);
+	data->main_data.img = mlx_new_image(data->main_data.mlx_ptr, \
+	data->wx, data->wy);
+	data->main_data.addr = (int *)mlx_get_data_addr(data->main_data.img, \
+	&data->main_data. \
+	bits_per_pixel, &data->main_data.line_length, &data->main_data.endian);
+	data->main_data.mlx_win = mlx_new_window(data->main_data.mlx_ptr, data->wx,
+			data->wy, "CUB3D");
+	mlx_hook(data->main_data.mlx_win, 33, 1L << 17, clean_exit, data);
+	mlx_hook(data->main_data.mlx_win, 2, 1L << 0, key_press, data);
+	mlx_hook(data->main_data.mlx_win, 6, 1L << 6, mouse_move, data);
+	mlx_loop_hook(data->main_data.mlx_ptr, raycasting, data);
+	mlx_hook(data->main_data.mlx_win, 3, 1L << 1, key_release, data);
+	mlx_loop(data->main_data.mlx_ptr);
+	return (0);
+}
+
+int	main(int argc, char **argv)
 {
 	t_mdata	data;
+
 	initialize(&data);
 	if (argc == 2)
 		pre_check(argv[1], &data);

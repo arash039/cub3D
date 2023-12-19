@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3D.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ashojach <ashojach@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/19 12:31:23 by ashojach          #+#    #+#             */
+/*   Updated: 2023/12/19 13:25:02 by ashojach         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
-#define CUB3D_H
+# define CUB3D_H
 
 # include "mlx/mlx.h"
 # include "mlx/mlx_int.h"
@@ -14,19 +26,33 @@
 
 # define BUFFER_SIZE	4096
 # define MAX_PATH	4096
-# define MAX_SIZE	1024
+# define MAX_SIZE	600
 
-typedef struct		s_texture
+//int				texdir;
+//double			wallx; where exactly the wall was hit.
+//the exact value where the wall was hit, not just the integer 
+//coordinates of the wall
+//int				texx; int texX = int(wallX * double(texWidth)), 
+//x coordinate on the texture
+//int				texy; increasing by a precomputed step size 
+//(which is possible because this is constant in the vertical stripe) 
+//for each pixel
+//double			step; How much to increase the texture 
+//coordinate per screen pixel. 1.0 * texHeight / lineHeight
+//double			texpos; Starting texture coordinate. 
+//drawStart - h / 2 + lineHeight / 2) * step
+
+typedef struct s_texture
 {
 	int				texdir;
-	double			wallx; //where exactly the wall was hit.  the exact value where the wall was hit, not just the integer coordinates of the wall
-	int				texx; //int texX = int(wallX * double(texWidth)), x coordinate on the texture
-	int				texy; //increasing by a precomputed step size (which is possible because this is constant in the vertical stripe) for each pixel
-	double			step; //How much to increase the texture coordinate per screen pixel. 1.0 * texHeight / lineHeight
-	double			texpos; //Starting texture coordinate. drawStart - h / 2 + lineHeight / 2) * step
+	double			wallx;
+	int				texx;
+	int				texy;
+	double			step;
+	double			texpos;
 }					t_texture;
 
-typedef struct		s_idata
+typedef struct s_idata
 {
 	void			*mlx_ptr;
 	void			*mlx_win;
@@ -44,13 +70,11 @@ typedef struct		s_idata
 	int				minimapechelle;
 	int				width;
 	int				height;
-	int 			last_x;
-	int 			last_y;
+	int				last_x;
+	int				last_y;
 }					t_idata;
 
-typedef struct		s_ray
-{
-	double			posx; //position vector of the player
+/* double			posx; //position vector of the player
 	double			posy;
 	double			dirx; //direction of the player
 	double			diry;
@@ -58,57 +82,117 @@ typedef struct		s_ray
 	double			plany;
 	double			raydirx; //dirX + planeX * cameraX
 	double			raydiry;
-	double			camerax; //x-coordinate on the camera plane that the current x-coordinate of the screen represents, done this way so that the right side of the screen will get coordinate 1, the center of the screen gets coordinate 0, and the left side of the screen gets coordinate -1
+	double			camerax; //x-coordinate on the camera plane that the
+	current x-coordinate of the screen represents, done this way so 
+	that the right side of the screen will get coordinate 1, the center 
+	of the screen gets coordinate 0, and the left side of the screen gets 
+	coordinate -1
+
 	int				mapx; //current square of the map the ray is in
 	int				mapy;
-	double			sidedistx; //initially the distance the ray has to travel from its start position to the first x-side and the first y-side
+	double			sidedistx; //initially the distance the ray has to
+	travel from its start position to the first x-side and the first y-side
+
 	double			sidedisty;
-	double			deltadistx; //the distance the ray has to travel to go from 1 x-side to the next x-sid : abs(1 / rayDirX)
+	double			deltadistx; //the distance the ray has to travel 
+	to go from 1 x-side to the next x-sid : abs(1 / rayDirX)
+
 	double			deltadisty;
-	double			perpwalldist; //perpenducular distance not Euclidean: the length of the ray. if (side == 0) -> sideDistX - deltaDistX || if (side == 1) -> sideDistY - deltaDistY
-	int				stepx; //the direction of the ray: either -1 or +1 (negative or positive x-direction)
+	double			perpwalldist; //perpenducular distance not Euclidean: 
+	the length of the ray. if (side == 0) -> sideDistX - deltaDistX || 
+	if (side == 1) -> sideDistY - deltaDistY
+
+	int				stepx; //the direction of the ray: either -1 or +1 
+	(negative or positive x-direction)
+
 	int				stepy;
-	int				hit; //whether or not the coming loop may be ended, and side will contain if an x-side or a y-side of a wall was hit.  if (Map[mapX][mapY] > 0)->hit = 1;
-	int				side; //which side of the wall is hit & what wall was hit with mapX and mapY
-	int				lineheight; //the height of the line that has to be drawn on screen, the inverse of perpWallDist multiplied by **h(the height in pixels of the screen)** -> h / perpWallDist: this can be scaled by any default number
-	int				drawstart; //start and end position of where we should really draw. he center of the wall should be at the center of the screen, and if these points lie outside the screen, they're capped to 0 or h-1. -> -lineHeight / 2 + h / 2
+	int				hit; //whether or not the coming loop may be ended,
+	and side will contain if an x-side or a y-side of a wall was hit.  
+	if (Map[mapX][mapY] > 0)->hit = 1;
+
+	int				side; //which side of the wall is hit & what wall 
+	was hit with mapX and mapY
+
+	int				lineheight; //the height of the line that has to be 
+	drawn on screen, the inverse of perpWallDist multiplied by 
+	**h(the height in pixels of the screen)** -> h / perpWallDist: 
+	this can be scaled by any default number
+
+	int				drawstart; //start and end position of where we should 
+	really draw. he center of the wall should be at the center of the 
+	screen, and if these points lie outside the screen, they're 
+	capped to 0 or h-1. -> -lineHeight / 2 + h / 2
+
 	int				drawend; //lineHeight / 2 + h / 2
-	double			movespeed; //The speed modifiers use frameTime, and a constant value, to determinate the speed of the moving and rotating of the input keys
+	double			movespeed; //The speed modifiers use frameTime, and a 
+	constant value, to determinate the speed of the moving and rotating of 
+	the input keys
+
+	double			rotspeed;
+	int				x; */
+
+typedef struct s_ray
+{
+	double			posx;
+	double			posy;
+	double			dirx;
+	double			diry;
+	double			planx;
+	double			plany;
+	double			raydirx;
+	double			raydiry;
+	double			camerax;
+	int				mapx;
+	int				mapy;
+	double			sidedistx;
+	double			sidedisty;
+	double			deltadistx;
+	double			deltadisty;
+	double			perpwalldist;
+	int				stepx;
+	int				stepy;
+	int				hit;
+	int				side;
+	int				lineheight;
+	int				drawstart;
+	int				drawend;
+	double			movespeed;
 	double			rotspeed;
 	int				x;
 }					t_ray;
 
-typedef struct		s_mdata
+typedef struct s_mdata
 {
-	int	i;
-	int	rows;
-	int	columns;
-	int	f;
-	int	c;
-	int	x;
-	int	wx;
-	int	wy;
-	int	screenx;
-	int	screeny;
-	int	bytes;
-	int	mini;
-	char	start;
-	int		start_x;
-	int		start_y;
-	int		map[MAX_SIZE][MAX_SIZE];
-	char	no[MAX_PATH];
-	char	so[MAX_PATH];
-	char	ea[MAX_PATH];
-	char	we[MAX_PATH];
-	char	*err_msg;
-	t_idata textures[4];
-	t_idata	main_data;
-	t_idata	minimap;
-	t_ray	ray;
+	int			i;
+	int			rows;
+	int			columns;
+	int			f;
+	int			c;
+	int			x;
+	int			wx;
+	int			wy;
+	int			screenx;
+	int			screeny;
+	int			bytes;
+	int			mini;
+	int			inmap;
+	int			newline;
+	char		start;
+	int			start_x;
+	int			start_y;
+	int			clean_exit;
+	int			map[MAX_SIZE][MAX_SIZE];
+	char		no[MAX_PATH];
+	char		so[MAX_PATH];
+	char		ea[MAX_PATH];
+	char		we[MAX_PATH];
+	char		*err_msg;
+	t_idata		textures[4];
+	t_idata		main_data;
+	t_idata		minimap;
+	t_ray		ray;
 	t_texture	tex;
 }	t_mdata;
-
-
 
 void	parser(char *file_name, t_mdata *data);
 int		color_finder(char *str, t_mdata *data);
@@ -120,7 +204,6 @@ char	*ft_subbuff(char *buff, int start, int len);
 int		get_next_line(int fd, char **line, t_mdata *data);
 char	*ft_strjoin(char *s1, char *s2);
 int		gnl_exit(char **buff, t_mdata *data);
-
 int		ft_eof(int ret, char **buff, char **line);
 int		ft_copy(char **line, char **buff);
 int		ft_check(char *str);
@@ -129,8 +212,6 @@ int		allocate_buff(char **buff);
 int		check_buff(char **buff, char **line);
 void	copy_buff_to_line(char **line, char **buff, int start);
 char	*join_and_free(char *s1, char *s2);
-
-
 int		pre_check(char *str, t_mdata *data);
 int		main(int argc, char **argv);
 void	error_handle(t_mdata *data, char *str);
@@ -147,7 +228,6 @@ int		copy_map(char *str, t_mdata *data);
 int		create_map(char *file_name, t_mdata *data);
 void	print_map(t_mdata *data);
 int		wall_check(t_mdata *data, char *str, int row);
-
 void	ray_init(t_mdata *data);
 void	dir_vector_init(t_mdata *data);
 int		raycasting(t_mdata *data);
@@ -157,7 +237,6 @@ void	step_sidedist(t_mdata *data);
 void	drawing_loop(t_mdata *data);
 void	drawing_cal(t_mdata *data);
 int		drawing_function(t_mdata *data);
-
 int		clean_exit(t_mdata *data);
 void	image_swap(t_mdata *data);
 void	rotate_left(t_mdata *data, double olddirx);
@@ -169,16 +248,14 @@ int		key_press(int keycode, t_mdata *data);
 int		handle_resize(int button, int x, int y, t_mdata *data);
 int		change_win(t_mdata *data);
 void	screen_size(t_mdata *data);
-
 void	minimap_init(t_mdata *data);
-void minimap_draw(t_mdata *data, int player_x, int player_y);
-
-int	mouse_move(int x, int y, t_mdata *data);
-
+void	minimap_draw(t_mdata *data, int player_x, int player_y);
+int		mouse_move(int x, int y, t_mdata *data);
 void	get_texture_adress(t_mdata *data);
 void	get_texture_img(t_mdata *data);
 void	init_texture(t_mdata *data);
-void draw_texture_pixel(int x, int y, t_mdata *data);
+void	draw_texture_pixel(int x, int y, t_mdata *data);
 void	draw_texture(t_mdata *data, int x, int y);
+void	init_image(t_mdata *data);
 
 #endif
