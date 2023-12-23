@@ -1,7 +1,7 @@
 # cub3D
 
 ## Overview
-cub3D is a graphic design project inspired by the classic game Wolfenstein 3D, the first First Person Shooter (FPS)[^2^][2]. It serves as a practical application of mathematics and ray-casting to create a dynamic 3D maze.
+cub3D is a graphic design project inspired by the classic game Wolfenstein 3D, the first First Person Shooter (FPS). It serves as a practical application of mathematics and ray-casting to create a dynamic 3D maze.
 
 ## Objectives
 - To apply rigorous programming skills using C.
@@ -29,7 +29,8 @@ Run the program with a .cub map file as an argument:
 
 ## Controls
 - Arrow keys: Look around the maze.
-- W, A, S, D: Move through the maze[^7^][7].
+- W, A, S, D: Move through the maze.
+- Press M for bonus minimap and mouse movement.
 - ESC: Exit the program.
 
 ## Map Configuration
