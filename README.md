@@ -20,7 +20,8 @@ cub3D is a graphic design project inspired by the classic game Wolfenstein 3D, t
 
 ## Installation
 1. Clone the repository.
-2. Compile the project using the Makefile.
+2. Copy minilibx library to mlx directory.
+3. Compile the project using the Makefile.
 
 ## Usage
 Run the program with a .cub map file as an argument:
