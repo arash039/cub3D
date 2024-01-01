@@ -106,6 +106,11 @@ void	floor_ceiling(char *str, t_mdata *data)
 	data->i = 0;
 	while (*temp == ' ')
 		temp++;
+	if ((temp[0] == 'F' && data->f != -1) || (temp[0] == 'C' && data->c != -1))
+	{
+		data->err_msg = "multiple definition of F/C colors";
+		return ;
+	}
 	if (temp[0] == 'F')
 		data->f = color_finder(temp, data);
 	else if (temp[0] == 'C')
