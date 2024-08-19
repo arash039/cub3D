@@ -1,5 +1,6 @@
 # cub3D
 
+![](https://github.com/arash039/cub3D/blob/master/Peek%202024-08-19%2003-41.gif)
 ## Overview
 cub3D is a graphic design project inspired by the classic game Wolfenstein 3D, the first First Person Shooter (FPS). It serves as a practical application of mathematics and ray-casting to create a dynamic 3D maze.
 
